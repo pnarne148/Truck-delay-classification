@@ -13,6 +13,7 @@ class DataIngestion:
 
     def __init__(self):
         self.config = config.read(CONFIG_FILE_PATH)
+        self.engine = create_engine(config.get('DATA', 'connection_string'))
     
     def download_dataframe(self, filename):
         print(config.get('DATA', filename))        
@@ -22,13 +23,8 @@ class DataIngestion:
 
     def upload_dataframe(self, dataframe, table_name, if_exists='replace'):
         try:
-            connection_string = config.get('DATA', 'connection_string')
-            engine = create_engine(connection_string)
-
-            dataframe.to_sql(table_name, engine, if_exists=if_exists, index=False)
-
+            dataframe.to_sql(table_name, self.engine, if_exists=if_exists, index=False)
             print(f"Dataframe successfully uploaded to table '{table_name}'")
-
         except Exception as error:
             print(f"Error uploading dataframe to table '{table_name}': {error}")
 

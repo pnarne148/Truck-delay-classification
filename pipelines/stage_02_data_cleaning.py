@@ -64,16 +64,13 @@ class DataCleaningPipeline:
             trucks_schedule_df['estimated_arrival'] = pd.to_datetime(trucks_schedule_df['estimated_arrival'])
 
             #############################################################
-            project = hopsworks.login()            
-            cleaning_obj.create_feature_group(project, route_df, "routes_info", ['route_id'])
-            cleaning_obj.create_feature_group(project, route_weather_df, "routes_weather_info", ['route_id',	'Date'])
-            cleaning_obj.create_feature_group(project, drivers_df, "drivers_info", ['driver_id'])
-            cleaning_obj.create_feature_group(project, trucks_df, "trucks_info", ['truck_id'])
-            cleaning_obj.create_feature_group(project, traffic_table_df, "route_traffic_info", ['route_id', 'date', 'hour'])
-            cleaning_obj.create_feature_group(project, trucks_schedule_df, "truck_schedule_info", ['truck_id','route_id', 'departure_date','estimated_arrival'])
+            cleaning_obj.create_feature_group(route_df, "routes_info", ['route_id'])
+            cleaning_obj.create_feature_group(route_weather_df, "routes_weather_info", ['route_id',	'Date'])
+            cleaning_obj.create_feature_group(drivers_df, "drivers_info", ['driver_id'])
+            cleaning_obj.create_feature_group(trucks_df, "trucks_info", ['truck_id'])
+            cleaning_obj.create_feature_group(traffic_table_df, "route_traffic_info", ['route_id', 'date', 'hour'])
+            cleaning_obj.create_feature_group(trucks_schedule_df, "truck_schedule_info", ['truck_id','route_id', 'departure_date','estimated_arrival'])
 
-            # cleaning_obj.create_feature_group(route_df, "drivers_info")
-            # cleaning_obj.create_feature_group(route_df, "trucks_schedule_info")
         except Exception as e:
             raise e
 

@@ -15,15 +15,15 @@ class DataCleaning:
     
     def __init__(self):
         self.config = config.read(CONFIG_FILE_PATH)
+        connection_string = config.get('DATA', "connection_string")
+        self.engine = create_engine(connection_string)            
+        self.project = hopsworks.login()
+
 
     def fetch_table(self, table):
         try:
-            connection_string = config.get('DATA', "connection_string")
-            engine = create_engine(connection_string)
-
             query = f"SELECT * FROM {table};"
-
-            df = pd.read_sql(query, engine)
+            df = pd.read_sql(query, self.engine)
             return df
         
         except Exception as error:
@@ -67,7 +67,7 @@ class DataCleaning:
     def create_feature_group(self, project, dataframe, name, key):
         print(f"Uploading '{name}'")
 
-        fs = project.get_feature_store()
+        fs = self.project.get_feature_store()
 
         feature_group = fs.create_feature_group(
             name=name,
